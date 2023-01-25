@@ -3,6 +3,76 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { MongoClient } = require('mongodb');
+
+
+// Connection URL
+const url = 'mongodb://localhost:27017/';
+const client = new MongoClient(url, { useUnifiedTopology: true });
+
+// DB Name
+const dbname = 'conFusion';
+
+
+const dbCon = async () => {
+  // Use connect method to connect to the server
+  await client.connect();
+  console.log('Connected correctly to server');
+
+  const db = client.db(dbname);
+  const collection = db.collection('dishes');
+
+  try {
+    const insertItem = await collection.insertOne({
+      "name": "coffe",
+      "description": "another test"
+    });
+    console.log('Inserted document =>', insertItem);
+
+    const findAll = await collection.find({}).toArray();
+    console.log('Found documents =>', findAll);
+  }
+  catch (err) {
+    console.log(err);
+  }
+  finally {
+    await client.close();
+  }
+
+}
+dbCon();
+
+// MongoClient.connect(url, (err, client) => {
+
+//   assert.equal(err, null);
+//   console.log('Connected correctly to server');
+
+//   const db = client.db(dbname);
+//   const collection = db.collection('dishes');
+
+//   collection.insertOne({
+//     "name": "coffe",
+//     "description": "another test"
+//   }, (err, result) => {
+//     assert.equal(err, null);
+
+//     console.log('Afetr Insert:\n');
+//     console.log(result.ops);
+
+//     collection.find({}).toArray((err, docs) => {
+//       assert.equal(err, null);
+
+//       console.log('Found:\n');
+//       console.log(docs);
+
+//       db.dropCollection('dishes', (err, result) => {
+//         assert.equal(err, null);
+
+//         client.close();
+//       })
+//     })
+//   })
+// })
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
