@@ -1,12 +1,11 @@
-const { db } = require('../config/dbConn');
+const Dish = require('../models/Dish');
 const ObjectId = require('mongodb').ObjectId;
 
-const collection = db.collection('dishes');
 
 const getAllDishes = async (req, res) => {
     
-    const dishes = await collection.find().toArray();
-    if(!dishes.length) return res.status(204).json({ 'message': 'No dishes found' });
+    const dishes = await Dish.find();
+    if(!dishes) return res.status(204).json({ 'message': 'No dishes found' });
     res.status(200).json(dishes);
 
 }
@@ -18,7 +17,7 @@ const createNewDish = async (req, res) => {
         });
     }
     try {
-        const result = await collection.insertOne({
+        const result = await Dish.create({
             name: req.body.name,
             description: req.body.description
         });
@@ -37,7 +36,7 @@ const updateDish = async (req, res) => {
 
     try {
         const id = new ObjectId(req.params.id);
-        const result = await collection.updateOne(
+        const result = await Dish.updateOne(
             { _id: id },
             { $set: {
                     name: req.body.name,
@@ -63,7 +62,7 @@ const deleteDish = async (req, res) => {
 
     try {
         const id = new ObjectId(req.params.id);
-        const result = await collection.deleteOne({ _id: id });
+        const result = await Dish.deleteOne({ _id: id });
 
         if (!result.deletedCount) {
             return res.status(204).json({ 'message': `No dish found whit ID ${req.params.id}` })
@@ -84,7 +83,7 @@ const getDish = async (req, res) => {
 
     try {
         const id = new ObjectId(req.params.id);
-        const result = await collection.findOne({ _id: id });
+        const result = await Dish.findById(id).exec();
 
         if (!result) {
             return res.status(204).json({ 'message': `No dish found whit ID ${req.params.id}` })

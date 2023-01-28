@@ -1,23 +1,18 @@
 
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
 
 // Connection URL
-const url = 'mongodb://localhost:27017/';
-const client = new MongoClient(url, { 
-  useUnifiedTopology: true,
-  retryWrites: true
-});
-
-// DB Name
-const dbname = 'conFusion';
-const  db = client.db(dbname);
+const url = 'mongodb://localhost:27017/conFusion';
 
 // Connect to DB
 const dbConn = async () => {
   // Use connect method to connect to the server
   try {
-    await client.connect();
+    await mongoose.connect(url, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    });
     console.log(`Connected succesfully to database`);
    
   }
@@ -26,15 +21,4 @@ const dbConn = async () => {
   }
 }
 
-// const monitorConnection = () => {
-//   if(db) {
-//       db.on('serverOpening', () => {
-//           console.log('Server reconnecting');
-//       });
-//   }
-// }
-
-module.exports = {
-  dbConn,
-  db
-}
+module.exports = dbConn
