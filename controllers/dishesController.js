@@ -115,7 +115,7 @@ const getDish = async (req, res) => {
         console.log(dish);
 
         if (!dish) {
-            return res.status(204).json({ 'message': `No dish found whit ID ${req.params.id}` })
+            return res.status(204).json({ 'message': `No dishh found whit ID ${req.params.id}` })
         }
         res.status(200).json(dish);
     }
