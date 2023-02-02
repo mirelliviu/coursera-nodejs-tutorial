@@ -6,23 +6,21 @@ const dishesController = require('../controllers/dishesController');
 router.use(bodyParser);
 
 router.route('/')
-  // .all((req, res, next) => {
-  //   res.status(200);
-  //   res.setHeader('Content-Type', 'text/plain');
-  //   next();
-  // })
   .get(dishesController.getAllDishes)
   .post(dishesController.createNewDish)
-  // .put((req, res) => {
-  //   res.status(403).send('PUT operation not supported on /dishes');
-  // })
-  // .delete((req, res) => {
-  //   res.send('Deleting all the dishes!');  
-  // });
 
-  router.route('/:id')
-    .get(dishesController.getDish)
-    .put(dishesController.updateDish)
-    .delete(dishesController.deleteDish);
+router.route('/:dishId')
+  .get(dishesController.getDish)
+  .put(dishesController.updateDish)
+  .delete(dishesController.deleteDish);
+
+router.route('/:dishId/comments')
+  .get(dishesController.getDishComments)
+  .post(dishesController.addDishComment)
+  .delete(dishesController.deleteDishComments);
+
+router.route('/:dishId/comments/:commentId')
+  .put(dishesController.updateDishComment)
+  .delete(dishesController.deleteDishComment);
 
 module.exports = router;
